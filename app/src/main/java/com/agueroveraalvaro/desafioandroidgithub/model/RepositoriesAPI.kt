@@ -2,7 +2,7 @@ package com.agueroveraalvaro.desafioandroidgithub.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ApiGitHubJSON(
+data class RepositoriesAPI(
     @SerializedName("incomplete_results")
     val incompleteResults: Boolean,
     @SerializedName("items")

@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.agueroveraalvaro.desafioandroidgithub.R
-import com.agueroveraalvaro.desafioandroidgithub.interfaces.RepositoryItemClick
-import com.agueroveraalvaro.desafioandroidgithub.model.Repository
+import com.agueroveraalvaro.desafioandroidgithub.interfaces.PullRequestItemClick
+import com.agueroveraalvaro.desafioandroidgithub.model.PullRequest
 import com.agueroveraalvaro.desafioandroidgithub.picasso.CropCircleTransformation
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.pull_request_item.view.*
 
 import kotlinx.android.synthetic.main.repository_item.view.*
 
-class RepositoriesAdapter(
-    private var data: MutableList<Repository>,
-    private val onRepositoryItemClick: RepositoryItemClick?
-) : RecyclerView.Adapter<RepositoriesAdapter.ViewHolder>()
+class PullRequestsAdapter(
+    private var data: MutableList<PullRequest>,
+    private val onPullRequestItemClick: PullRequestItemClick?
+) : RecyclerView.Adapter<PullRequestsAdapter.ViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.repository_item, parent, false)
+            .inflate(R.layout.pull_request_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -29,16 +30,14 @@ class RepositoriesAdapter(
     {
         val item = data.get(position)
 
-        holder.txtName.text = item.name
-        holder.txtDescription.text = item.description
-        holder.txtForks.text = item.forks.toString()
-        holder.txtStars.text = item.stargazersCount.toString()
-        holder.txtUsername.text = item.owner.login
-        holder.txtType.text = item.owner.type
+        holder.txtTitle.text = item.title
+        holder.txtBody.text = item.body
+        holder.txtUsername.text = item.user.login
+        holder.txtType.text = item.user.type
 
         Picasso
             .get()
-            .load(item.owner.avatarUrl)
+            .load(item.user.avatarUrl)
             .transform(CropCircleTransformation())
             .error(R.mipmap.ic_git_user)
             .fit()
@@ -46,17 +45,17 @@ class RepositoriesAdapter(
 
         holder.mView.setOnClickListener()
         {
-            onRepositoryItemClick?.onRepositoryItemClick(item)
+            onPullRequestItemClick?.onPullRequestItemClick(item)
         }
     }
 
-    fun add(repositories: List<Repository>?)
+    fun add(pullRequests: List<PullRequest>?)
     {
-        if (repositories != null)
+        if (pullRequests != null)
         {
-            for(repository in repositories)
+            for(pullRequest in pullRequests)
             {
-                repository.let { data.add(repository) }
+                pullRequest.let { data.add(pullRequest) }
                 //notifyItemInserted(data.size - 1)
             }
         }
@@ -74,17 +73,10 @@ class RepositoriesAdapter(
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView)
     {
-        val txtName: TextView = mView.txtName
-        val txtDescription: TextView = mView.txtDescription
-        val txtForks: TextView = mView.txtForks
-        val txtStars: TextView = mView.txtStars
-        val txtUsername: TextView = mView.txtUsername
-        val txtType: TextView = mView.txtType
-        val imgOwner: ImageView = mView.imgOwner
-
-        /*override fun toString(): String
-        {
-            return super.toString() + " '" + txtName.text + "'"
-        }*/
+        val txtTitle: TextView = mView.txtTitle
+        val txtBody: TextView = mView.txtBody
+        var txtUsername: TextView = mView.txtUsernamePullRequest
+        val txtType: TextView = mView.txtTypePullRequest
+        val imgOwner: ImageView = mView.imgOwnerPullRequest
     }
 }

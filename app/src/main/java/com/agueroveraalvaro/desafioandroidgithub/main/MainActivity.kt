@@ -35,12 +35,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val repositoriesFragment =
-            RepositoriesFragment.newInstance(1)
+        val repositoriesFragment = RepositoriesFragment()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container,repositoriesFragment, "RepositoriesFragment")
             .commit()
+
+        supportActionBar?.setTitle(R.string.app_name)
     }
 
     override fun onBackPressed() {
