@@ -1,5 +1,6 @@
 package com.agueroveraalvaro.desafioandroidgithub.api
 
+import com.agueroveraalvaro.desafioandroidgithub.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -13,7 +14,7 @@ object GitHubAPI
         {
             retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.github.com/")
+                .baseUrl(BuildConfig.API_URL)
                 .build()
         }
         return retrofit

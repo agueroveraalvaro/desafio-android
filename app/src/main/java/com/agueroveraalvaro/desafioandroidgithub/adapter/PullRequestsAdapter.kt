@@ -10,6 +10,7 @@ import com.agueroveraalvaro.desafioandroidgithub.R
 import com.agueroveraalvaro.desafioandroidgithub.interfaces.PullRequestItemClick
 import com.agueroveraalvaro.desafioandroidgithub.model.PullRequest
 import com.agueroveraalvaro.desafioandroidgithub.picasso.CropCircleTransformation
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.pull_request_item.view.*
 

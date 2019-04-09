@@ -28,35 +28,47 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/colorBlue"/>
 
-        <!--<LinearLayout
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:background="@color/colorGrey"
+                android:background="@color/colorLightGrey"
                 android:gravity="center">
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/ic_open"/>
 
             <TextView
                     android:id="@+id/txtOpen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="username"
+                    android:text="123"
                     android:gravity="center"
                     android:textColor="@color/colorBlue"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/ic_watch"
+                    android:layout_marginStart="10dp"/>
 
             <TextView
-                    android:id="@+id/txt"
+                    android:id="@+id/txtWatchers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="username"
                     android:gravity="center"
                     android:textColor="@color/colorBlue"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
 
-        </LinearLayout>-->
+        </LinearLayout>
 
         <FrameLayout
                 android:layout_width="match_parent"

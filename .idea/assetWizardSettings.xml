@@ -48,7 +48,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/toggle/ic_star_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_remove_red_eye_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -69,11 +69,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="assetType" value="IMAGE" />
                                       <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
                                       <entry key="imageAsset" value="$USER_HOME$/Desktop/DesafioGitHubResources/branch_git_orange.png" />
-                                      <entry key="outputName" value="ic_branch_git" />
+                                      <entry key="outputName" value="ic_watch" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -92,6 +91,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>

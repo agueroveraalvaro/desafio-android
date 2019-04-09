@@ -1,7 +1,7 @@
 package com.agueroveraalvaro.desafioandroidgithub.main
 
 import android.app.AlertDialog
-import android.opengl.Visibility
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -28,12 +28,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.content.Intent
+import android.net.Uri
+import java.util.ArrayList
 
-/**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [RepositoriesFragment.OnListFragmentInteractionListener] interface.
- */
 class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
 {
     private lateinit var recyclerViewRepositories: RecyclerView
@@ -42,6 +40,7 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
     private lateinit var refreshLayout: RefreshLayout
     var adapterPullRequests: PullRequestsAdapter? = null
     var progressBarPullRequests: ProgressBar? = null
+    lateinit var dialogPullRequests: AlertDialog
 
     val PARAM_LANGUAGE = "language:Java"
     val PARAM_SORT = "stars"
@@ -59,6 +58,12 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
         return view
     }
 
+    override fun onSaveInstanceState(outState: Bundle)
+    {
+        super.onSaveInstanceState(outState)
+        MyStaticClass.lastPositionScroll =  (recyclerViewRepositories.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+    }
+
     fun loadElements(view: View)
     {
         interfaceApi = GitHubAPI.getClient()?.create(InterfaceAPI::class.java)
@@ -68,8 +73,7 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
             recyclerViewRepositories.layoutManager = LinearLayoutManager(context)
         //else
         //    recyclerViewRepositories.layoutManager = GridLayoutManager(context, 1)
-
-        adapterRepositories = RepositoriesAdapter(mutableListOf(),this)
+        adapterRepositories = RepositoriesAdapter(MyStaticClass.staticRepositories,this)
         recyclerViewRepositories.adapter = adapterRepositories
 
         refreshLayout = view.findViewById<View>(R.id.refreshLayout) as RefreshLayout
@@ -84,10 +88,16 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
             PARAM_PAGE++
             fetchRepositories()
         })
-        refreshLayout.autoRefresh()
 
-        fetchRepositories()
+        if(MyStaticClass.staticRepositories.size==0)
+            refreshLayout.autoRefresh()
+        else
+            recyclerViewRepositories.scrollToPosition(MyStaticClass.lastPositionScroll)
+
+        if (MyStaticClass.isShowingRepository)
+            showPullRequests(MyStaticClass.currentRepository!!)
     }
+
 
     fun fetchRepositories()
     {
@@ -103,12 +113,14 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
             {
                 if(response.code() == 200)
                 {
+                    adapterRepositories.add(response.body()?.repositories)
+
                     if(PARAM_PAGE>1)
                         refreshLayout.finishLoadMore()
                     else
                         refreshLayout.finishRefresh()
 
-                    adapterRepositories.add(response.body()?.repositories)
+                    MyStaticClass.staticRepositories = adapterRepositories.getData()
                 }
             }
         })
@@ -126,7 +138,8 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
 
     override fun onPullRequestItemClick(pullRequest: PullRequest)
     {
-
+        val intent = Intent(Intent.ACTION_VIEW,Uri.parse(pullRequest.htmlUrl))
+        startActivity(intent)
     }
 
     private fun showPullRequests(repository: Repository)
@@ -135,12 +148,16 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
 
         progressBarPullRequests = dialogView.findViewById(R.id.progressBar) as ProgressBar
         val txtName = dialogView.findViewById(R.id.txtName) as TextView
+        val txtOpen = dialogView.findViewById(R.id.txtOpen) as TextView
+        val txtWatchers = dialogView.findViewById(R.id.txtWatchers) as TextView
         val recyclerViewPullRequests = dialogView.findViewById(R.id.recyclerViewPullRequests) as RecyclerView
         recyclerViewPullRequests.layoutManager = LinearLayoutManager(context)
         adapterPullRequests = PullRequestsAdapter(mutableListOf(),this)
         recyclerViewPullRequests.adapter = adapterPullRequests
 
         txtName.text = repository.name
+        txtOpen.text = repository.openIssuesCount.toString()
+        txtWatchers.text = repository.watchersCount.toString()
         fetchPullRequests(repository.owner.login,repository.name)
 
         val builder = AlertDialog.Builder(context)
@@ -148,10 +165,18 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
             //.setTitle(title)
             .setPositiveButton("Aceptar", null)
             //.setNegativeButton("Cancel", null)
-        val dialog = builder.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener{
-            dialog.dismiss()
+        dialogPullRequests = builder.show()
+
+        MyStaticClass.isShowingRepository = true
+        MyStaticClass.currentRepository = repository
+
+        dialogPullRequests.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener{
+            dialogPullRequests.dismiss()
         }
+        dialogPullRequests.setOnDismissListener(DialogInterface.OnDismissListener {
+            MyStaticClass.isShowingRepository = false
+            MyStaticClass.currentRepository = null
+        })
     }
 
     fun fetchPullRequests(login:String,name:String)
@@ -178,5 +203,14 @@ class RepositoriesFragment : Fragment(),RepositoryItemClick,PullRequestItemClick
     private fun callPullRequestsService(login:String,name:String): Call<List<PullRequest>>?
     {
         return interfaceApi?.getPullRequestsRepository(login,name)
+    }
+}
+
+class MyStaticClass {
+    companion object {
+        var staticRepositories = ArrayList<Repository>()
+        var lastPositionScroll: Int = 0
+        var isShowingRepository: Boolean = false
+        var currentRepository: Repository? = null
     }
 }

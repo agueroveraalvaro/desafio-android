@@ -10,6 +10,9 @@ import android.view.MenuItem
 import com.agueroveraalvaro.desafioandroidgithub.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import android.support.v4.app.FragmentActivity
+
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener
 {
@@ -35,11 +38,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val repositoriesFragment = RepositoriesFragment()
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container,repositoriesFragment, "RepositoriesFragment")
-            .commit()
+        if (savedInstanceState == null)
+        {
+            val repositoriesFragment = RepositoriesFragment()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container,repositoriesFragment, "RepositoriesFragment")
+                .commit()
+        }
 
         supportActionBar?.setTitle(R.string.app_name)
     }

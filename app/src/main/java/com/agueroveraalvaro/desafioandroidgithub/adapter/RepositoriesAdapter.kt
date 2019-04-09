@@ -10,12 +10,13 @@ import com.agueroveraalvaro.desafioandroidgithub.R
 import com.agueroveraalvaro.desafioandroidgithub.interfaces.RepositoryItemClick
 import com.agueroveraalvaro.desafioandroidgithub.model.Repository
 import com.agueroveraalvaro.desafioandroidgithub.picasso.CropCircleTransformation
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.repository_item.view.*
 
 class RepositoriesAdapter(
-    private var data: MutableList<Repository>,
+    private var data: ArrayList<Repository>,
     private val onRepositoryItemClick: RepositoryItemClick?
 ) : RecyclerView.Adapter<RepositoriesAdapter.ViewHolder>()
 {
@@ -69,6 +70,8 @@ class RepositoriesAdapter(
         if (notifyDataSetChanged_)
             notifyDataSetChanged()
     }
+
+    fun getData(): ArrayList<Repository> = data
 
     override fun getItemCount(): Int = data.size
 
